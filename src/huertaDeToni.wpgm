@@ -12,6 +12,33 @@ program huertaDeToni {
 	
 	// Agregamos al amigo Toni.
 	game.addVisual(toni)
+	keyboard.up().onPressDo({toni.caminarHaciaArriba()})
+	keyboard.down().onPressDo({toni.caminarHaciaAbajo()})
+	keyboard.left().onPressDo({toni.caminarHaciaLaIzq()})
+	keyboard.right().onPressDo({toni.caminarHaciaLaDer()})
+	keyboard.m().onPressDo({toni.sembrar(new Maiz())})
+	keyboard.t().onPressDo({toni.sembrar(new Trigo())})
+	keyboard.o().onPressDo({toni.sembrar(new Tomaco())})
+	keyboard.a().onPressDo({toni.regarLasPlantas()})
+	keyboard.r().onPressDo{ 
+		if(game.colliders(toni).size()==1&&game.colliders(toni).first().esPlanta()){
+			game.colliders(toni).first().regar()
+		}
+		
+		}
+	keyboard.x().onPressDo({toni.cosecharTodo()})
+	keyboard.c().onPressDo({
+		if(game.colliders(toni).size()==1 && game.colliders(toni).first().esPlanta()&& game.colliders(toni).esPlanta()){
+			toni.cosechar(game.colliders(toni).first())
+		}else if(game.colliders(toni).size() == 1 && game.colliders(toni).first().esPlanta() && not game.colliders(toni).first().estaLista()) {
+				 toni.error("Esta planta aun no esta lista")
+		}
+		else {toni.error("Esto no se puede cosechar")}
+	})
+	keyboard.v().onPressDo({toni.venderCosecha()})
+	keyboard.space().onPressDo({
+		game.say(toni, "Tengo" + toni.oroTotal()+"oro"+toni.plantasCosechadas().size()+" plantas listas para ser vendidas")
+	})
 	
 	/*
 	 * Acá usamos addVisualIn en vez de addVisual, y por esto 

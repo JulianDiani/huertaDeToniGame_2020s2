@@ -1,5 +1,6 @@
 import wollok.game.*
 import plantas.*
+import pachamama.*
 
 object toni {
 	const property image = "toni.png"
@@ -9,7 +10,7 @@ object toni {
 	var property position = game.at(3, 3)
 	
 	method sembrar(planta){
-		if (game.colliders(self).size()==1){
+		if (game.colliders(self).size()>0){
 			self.error("Ya hay una planta")
 			} else {
 			plantasSembradas.add(planta)
@@ -21,7 +22,7 @@ object toni {
 			if(p.esPlanta()){
 				p.regar()
 			}else{
-				self.error("esto no se puede regar")
+				self.error("esto no es una planta")
 			}
 		})
 	}
@@ -32,7 +33,11 @@ object toni {
 		if(planta.listoParaLaCosecha()){
 		plantasSembradas.remove(planta)
 		game.removeVisual(planta)
-		plantasCosechadas.add(planta)}
+		plantasCosechadas.add(planta)}else if(not planta.listoParaLaCosecha()){
+			self.error("no esta lista para ser cosechada")
+		}else{
+			self.error("no hay ninguna planta aqui.")
+		}
 	}
 	method cosecharTodo(){
 		plantasSembradas.forEach({p=>self.cosechar(p)})
@@ -70,28 +75,44 @@ object toni {
 		if(not self.estaEnElBordeSup()){
 			position=self.position().up(1)
 		}else{
-			position=self.position().down(game.height()-1)
+			position=self.position().down(game.height()-1)//agrego caminar como pacman,probar
 		}
 	}
 	method caminarHaciaAbajo(){
 		if(not self.estaEnElBordeInf()){
 			position=self.position().down(1)
 		}else{
-			position=self.position().up(game.height()-1)
+			position=self.position().up(game.height()-1)//caminar como pac
 		}
 	}
 	method caminarHaciaLaIzq(){
 		if(not self.estaEnElBordeIzq()){
 			position=self.position().left(1)
 		}else{
-			position=self.position().right(game.width()-1)
+			position=self.position().right(game.width()-1)//caminar como pac
 		}
 	}
 	method caminarHaciaLaDer(){
 		if(not self.estaEnElBordeDer()){
 			position=self.position().right(1)
 		}else{
-			position=self.position().left(game.width()-1)
+			position=self.position().left(game.width()-1)//caminar como pac
+		}
+	}
+	method sacarPlanta(planta){
+		plantasSembradas.remove(planta)
+		game.removeVisual(planta)
+	}
+	method hacerOfrendaALaPacha(){
+		if(not pachamama.estaAgradecida()&&plantasSembradas.size()>0){
+			self.sacarPlanta(plantasSembradas.anyOne())
+			pachamama.nivelDeAgradecimiento(10)
+			pachamama.moverse()//probar si se mueve la pacha
+		}else if(pachamama.estaAgradecida()&&plantasSembradas.size()>0){
+			pachamama.llover()
+			self.sacarPlanta(plantasSembradas.anyOne())
+			self.regarLasPlantas()
+			pachamama.moverse()
 		}
 	}
 	

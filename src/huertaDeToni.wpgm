@@ -2,6 +2,7 @@ import wollok.game.*
 import toni.*
 import plantas.*
 import pachamama.*
+import mercados.*
 
 program huertaDeToni {
 	game.width(15)
@@ -28,35 +29,34 @@ program huertaDeToni {
 		}
 	keyboard.x().onPressDo({toni.cosecharTodo()})
 	keyboard.c().onPressDo({
-		if(game.colliders(toni).size()==1 && game.colliders(toni).first().esPlanta()&& game.colliders(toni).esPlanta()){
+		if(game.colliders(toni).size()>0&& game.colliders(toni).first().esPlanta()&& game.colliders(toni).first().listoParaLaCosecha()){
 			toni.cosechar(game.colliders(toni).first())
-		}else if(game.colliders(toni).size() == 1 && game.colliders(toni).first().esPlanta() && not game.colliders(toni).first().estaLista()) {
-				 toni.error("Esta planta aun no esta lista")
+		}else if(game.colliders(toni).size()>0&&game.colliders(toni).first().esPlanta()&&not game.colliders(toni).first().listoParaLaCosecha()) {
+				 toni.error("Esta planta no esta lista para cosechar")
 		}
 		else {toni.error("Esto no se puede cosechar")}
 	})
-	keyboard.v().onPressDo({toni.venderCosecha()})
+	keyboard.v().onPressDo({
+		if (game.colliders(toni).size()>0&& not game.colliders(toni).first().esPlanta()&&toni.plantasCosechadas().size()>=1){
+			if (toni.plantasCosechadas().sum{p=> p.precio()}<= game.colliders(toni).first().cantidadDeMonedas()){
+				game.colliders(toni).first().comprar()} else{toni.error("el mercado no tiene tanto dinero")}}
+		else if(game.colliders(toni).size()>0 && not game.colliders(toni).first().esPlanta() &&toni.plantasCosechadas().size()<1){
+			toni.error("no tengo plantas para vender")
+		}
+		else{toni.error("esto no es un mercado, no puedo vender.")}
+		})
+				
 	keyboard.space().onPressDo({
-		game.say(toni, "Tengo" + toni.oroTotal()+"oro"+toni.plantasCosechadas().size()+" plantas listas para ser vendidas")
+		game.say(toni, "Tengo" + toni.oroTotal()+" oro y"+toni.plantasCosechadas().size()+" plantas listas para ser vendidas")
 	})
+	keyboard.f().onPressDo({pachamama.fumigar()})
+	keyboard.l().onPressDo({pachamama.llover()})
 	
-	/*
-	 * Acá usamos addVisualIn en vez de addVisual, y por esto 
-	 * no es necesario que la pachamama conozca su positionn
-	 */
-	game.addVisualIn(pachamama, game.at(0, 13));
-	
-	/* 
-	 * Agregamos una fila de maices. Ojo al regar, que Toni no va a conocer
-	 * estas plantas.
-	 * 
-	 * En este ejemplo también usamos addVisualIn, por lo tanto
-	 * el Maiz solo define la imagen.
-	 * 
-	 * De yapa, mostramos cómo agregar varios objetos de una utilizando
-	 * un rango (1..13), que equivale a la lista [1, 2, 3, ..., 13].
-	 */
-	(1..13).forEach { x => game.addVisualIn(new Maiz(), game.at(x, 5)) }
-		
+	game.addVisual(pachamama)
+	game.whenCollideDo(pachamama, {t=>t.hacerOfrendaALaPacha()})
+	var mercado1=new Mercado(position= game.at(0,12), cantidadDeMonedas=5400)
+	game.addVisual(mercado1)
+	var mercado2=new Mercado(position= game.at(14,8), cantidadDeMonedas=6000)
+	game.addVisual(mercado2)	
 	game.start()
 }

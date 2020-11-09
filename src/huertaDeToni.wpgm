@@ -15,7 +15,7 @@ program huertaDeToni {
 	
 	/*
 	 * Acá usamos addVisualIn en vez de addVisual, y por esto 
-	 * no es necesario que la pachamama conozca su position.
+	 * no es necesario que la pachamama conozca su positionn
 	 */
 	game.addVisualIn(pachamama, game.at(0, 13));
 	

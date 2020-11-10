@@ -75,28 +75,28 @@ object toni {
 		if(not self.estaEnElBordeSup()){
 			position=self.position().up(1)
 		}else{
-			position=self.position().down(game.height()-1)//agrego caminar como pacman,probar
+			position=self.position().down(game.height()-1)
 		}
 	}
 	method caminarHaciaAbajo(){
 		if(not self.estaEnElBordeInf()){
 			position=self.position().down(1)
 		}else{
-			position=self.position().up(game.height()-1)//caminar como pac
+			position=self.position().up(game.height()-1)
 		}
 	}
 	method caminarHaciaLaIzq(){
 		if(not self.estaEnElBordeIzq()){
 			position=self.position().left(1)
 		}else{
-			position=self.position().right(game.width()-1)//caminar como pac
+			position=self.position().right(game.width()-1)
 		}
 	}
 	method caminarHaciaLaDer(){
 		if(not self.estaEnElBordeDer()){
 			position=self.position().right(1)
 		}else{
-			position=self.position().left(game.width()-1)//caminar como pac
+			position=self.position().left(game.width()-1)
 		}
 	}
 	method sacarPlanta(planta){
@@ -107,7 +107,7 @@ object toni {
 		if(not pachamama.estaAgradecida()&&plantasSembradas.size()>0){
 			self.sacarPlanta(plantasSembradas.anyOne())
 			pachamama.nivelDeAgradecimiento(10)
-			pachamama.moverse()//probar si se mueve la pacha
+			pachamama.moverse()
 		}else if(pachamama.estaAgradecida()&&plantasSembradas.size()>0){
 			pachamama.llover()
 			self.sacarPlanta(plantasSembradas.anyOne())

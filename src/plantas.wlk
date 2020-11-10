@@ -5,7 +5,6 @@ class Maiz {
 	var property position=toni.position()
 	
 	method image() {
-		// Modificar esto para que la imagen dependa del estado.
 		return if (esBebe){"maiz_bebe.png"}else{"maiz_adulto.png"}
 	}
 	method regar(){
@@ -34,7 +33,7 @@ class Trigo{
 	else{return "trigo_3.png"}
 	}
 	method regar(){
-			if(pachamama.estaAgradecida()&& etapaEvolucion<2){etapaEvolucion+=2}//agrego condiciones de la pacha
+			if(pachamama.estaAgradecida()&& etapaEvolucion<2){etapaEvolucion+=2}
 			else if(not pachamama.estaAgradecida()&& etapaEvolucion<3){
 				etapaEvolucion+=1
 			}else{etapaEvolucion=0}
@@ -55,7 +54,7 @@ class Tomaco{
 		return if(self.listoParaLaCosecha()){"tomaco_ok.png"}else{"tomaco_podrido.png"}
 	}
 	method regar(){}
-	method listoParaLaCosecha(){return not pachamama.estaAgradecida()}//agrego efecto de la pacha agradecida
+	method listoParaLaCosecha(){return not pachamama.estaAgradecida()}
 	method libreGluten(){return true}
 	method esPlanta(){return true}
 	method precio(){return 80}

@@ -7,11 +7,7 @@ import mercados.*
 program huertaDeToni {
 	game.width(15)
 	game.height(15)
-	
-	// Configuramos una imagen de fondo, que se repite para cada celda del tablero.
 	game.ground("tierra.png")
-	
-	// Agregamos al amigo Toni.
 	game.addVisual(toni)
 	keyboard.up().onPressDo({toni.caminarHaciaArriba()})
 	keyboard.down().onPressDo({toni.caminarHaciaAbajo()})

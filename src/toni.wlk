@@ -40,7 +40,7 @@ object toni {
 		}
 	}
 	method cosecharTodo(){
-		plantasSembradas.forEach({p=>self.cosechar(p)})
+		plantasSembradas.forEach({p=> if(p.listoParaLaCosecha()){self.cosechar(p)}})
 	}
 	method vender(planta){
 		oroTotal+=planta.precio()
@@ -60,7 +60,7 @@ object toni {
 		return plantasSembradas.any({p=>not p.listoParaLaCosecha()})
 	}
 	method estaEnElBordeIzq() {
-		return (0 ..game.width()).any({y=>self.position()==game.at(0, y)})
+		return (0 ..game.width()).any({y=>self.position()==game.at(0, y)}) //verifica que la posicion de toni esta en la coordenada 0 de x, y cualquiera de Y
 	}
 	method estaEnElBordeDer() {
 		return (0 .. game.width()).any({y=> self.position()==game.at(game.width()-1, y)})
@@ -115,5 +115,26 @@ object toni {
 			pachamama.moverse()
 		}
 	}
-	
+	method regarPlantaActual(){
+		if(game.colliders(self).size()==1&&game.colliders(self).first().esPlanta()){
+			game.colliders(self).first().regar()
+		}
+	}
+	method cosecharPlantaActual(){
+		if(game.colliders(self).size()>0&& game.colliders(self).first().esPlanta()&& game.colliders(self).first().listoParaLaCosecha()){
+			self.cosechar(game.colliders(self).first())
+		}else if(game.colliders(self).size()>0&&game.colliders(self).first().esPlanta()&&not game.colliders(self).first().listoParaLaCosecha()) {
+				 self.error("Esta planta no esta lista para cosechar")
+		}
+		else {self.error("Esto no se puede cosechar")}
+	}
+	method venderTodas(){
+		if (game.colliders(self).size()>0&& not game.colliders(self).first().esPlanta()&&self.plantasCosechadas().size()>=1){
+			if (self.plantasCosechadas().sum{p=> p.precio()}<= game.colliders(self).first().cantidadDeMonedas()){
+				game.colliders(self).first().comprar()} else{self.error("el mercado no tiene tanto dinero")}}
+		else if(game.colliders(self).size()>0 && not game.colliders(self).first().esPlanta() &&self.plantasCosechadas().size()<1){
+			self.error("no tengo plantas para vender")
+		}
+		else{self.error("esto no es un mercado, no puedo vender.")}
+	}
 }
